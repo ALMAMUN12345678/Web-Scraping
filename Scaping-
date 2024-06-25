@@ -1,0 +1,14 @@
+Book_name = []
+for page in range(1,50):
+    url = f'https://books.toscrape.com/catalogue/page-{page}.html'
+    page = requests.get(url)
+    soup = BeautifulSoup(page.text,'html')
+    articles = soup.find_all('article', class_='product_pod')
+    #prize = soup.find_all('div',class_='product_price')
+    for book_name in articles:
+        Book = book_name.h3.a['title']
+        value = book_name.p['class'][1]
+        price = book_name.find('div', class_='product_price').p.text
+        Book_name.append({'Book_name':Book,'Pice':price,'Rating': value})
+df=pd.DataFrame(Book_name)
+df=df['Pice'].str.replace('Â','')
